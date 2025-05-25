@@ -16,10 +16,22 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://content.netacad.com/*", "https://*.netacad.com/*","https://www.netacad.com/*", "<all_urls>"],
-      "js": ["script.js"],
+      "matches": [
+        "https://content.netacad.com/*",
+        "https://*.netacad.com/*",
+        "https://www.netacad.com/*",
+        "<all_urls>"
+      ],
+      "js": [
+        "script.js"
+      ],
       "all_frames": true,
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }
