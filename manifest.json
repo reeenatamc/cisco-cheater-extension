@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Cisco Helper",
+  "version": "1.0",
+  "description": "Consulta automática al servidor Django.",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "clipboardRead",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://www.netacad.com/*",
+    "https://content.netacad.com/*",
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://content.netacad.com/*", "https://*.netacad.com/*","https://www.netacad.com/*", "<all_urls>"],
+      "js": ["script.js"],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ]
+}
