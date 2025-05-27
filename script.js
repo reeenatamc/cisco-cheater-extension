@@ -1,4 +1,5 @@
-const serverURL = "http://localhost:8000/buscar/";
+// const serverURL = "http://localhost:8000/buscar/";
+const serverURL = "https://cisco-cheater.onrender.com/buscar/"
 
 function mostrarRespuesta(respuesta) {
   let box = document.createElement("div");
@@ -22,7 +23,7 @@ function mostrarRespuesta(respuesta) {
   box.style.fontSize = "9px";
   box.style.color = "rgba(0, 0, 0, 0.15)";
   box.style.maxWidth = "220px";
-  box.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.05)";
+  box.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0)";
   box.style.backdropFilter = "blur(2px)";
   box.style.transition = "opacity 0.5s ease";
   box.style.opacity = "0";
