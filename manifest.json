@@ -7,20 +7,19 @@
     "scripting",
     "activeTab",
     "clipboardRead",
-    "clipboardWrite"
+    "clipboardWrite",
+    "storage"
   ],
   "host_permissions": [
     "https://www.netacad.com/*",
-    "https://content.netacad.com/*",
-    "<all_urls>"
+    "https://content.netacad.com/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://content.netacad.com/*",
         "https://*.netacad.com/*",
-        "https://www.netacad.com/*",
-        "<all_urls>"
+        "https://www.netacad.com/*"
       ],
       "js": [
         "script.js"
@@ -34,4 +33,4 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   }
-}
+} 
