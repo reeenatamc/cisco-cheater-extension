@@ -5,7 +5,7 @@ Extensión de navegador que consulta automáticamente texto seleccionado al serv
 ## 📦 Contenido
 
 - `manifest.json`: Configura los permisos, dominios permitidos y el script.
-- `script.js`: Escucha la selección de texto, lo copia y consulta al servidor Django (`http://localhost:8000/buscar/`).
+- `script.js`: Escucha la selección de texto, lo copia y consulta a un servidor.
 
 ## ⚙️ Instalación
 
@@ -22,7 +22,7 @@ Extensión de navegador que consulta automáticamente texto seleccionado al serv
 
 ## 🧠 Requisitos
 
-El servidor debe estar corriendo en `http://localhost:8000/buscar/` y responder con JSON:
+El servidor debe estar corriendo y responder con JSON:
 
 ```json
 { "respuesta": "Texto de respuesta" }
