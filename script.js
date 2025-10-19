@@ -1,5 +1,6 @@
-// const serverURL = "http://localhost:8000";
-const serverURL = "https://cisco-cheater.onrender.com";
+const serverURL = "https://cisco-cheater-production-2079.up.railway.app";
+// const serverURL = "https://cisco-cheater.onrender.com";
+// const serverURL = "http://104.248.177.44";
 
 
 // Función para generar un ID único del dispositivo
@@ -141,7 +142,6 @@ function mostrarRespuesta(respuesta) {
   box.style.position = "fixed";
   box.style.bottom = "16px";
   box.style.left = "16px";
-  box.style.transform = "none";
   box.style.padding = "3px 6px";
   box.style.borderRadius = "4px";
   box.style.zIndex = "9999";
@@ -149,12 +149,10 @@ function mostrarRespuesta(respuesta) {
   box.style.fontSize = "8px";
   box.style.maxWidth = "180px";
   box.style.backdropFilter = "blur(2px)";
-  box.style.transition = "opacity 0.5s ease";
-  box.style.opacity = "0";
-  box.style.border = "none";
-  box.style.boxShadow = "none";
+  box.style.transition = "opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease";
+  box.style.opacity = "0.3"; // opacidad inicial baja
+  box.style.cursor = "pointer";
 
-  // Estilos específicos según el modo
   if (isDarkMode) {
     box.style.backgroundColor = "rgba(30, 30, 30, 0.1)";
     box.style.color = "rgba(255, 255, 255, 0.3)";
@@ -164,13 +162,36 @@ function mostrarRespuesta(respuesta) {
   }
 
   document.body.appendChild(box);
+
+  // Animación inicial
   requestAnimationFrame(() => { box.style.opacity = "1"; });
 
-  setTimeout(() => {
-    box.style.opacity = "0";
-    setTimeout(() => box.remove(), 500);
-  }, 4000);
+  // Manejo de clicks sobre el popup
+  let activo = false;
+  box.addEventListener("click", (e) => {
+    e.stopPropagation(); // Evita que el click se propague al body
+    if (!activo) {
+      // Hacer más claro
+      box.style.backgroundColor = isDarkMode ? "rgba(30,30,30,0.3)" : "rgba(240,240,240,0.3)";
+      box.style.color = isDarkMode ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)";
+    } else {
+      // Volver al estado original
+      box.style.backgroundColor = isDarkMode ? "rgba(30,30,30,0.1)" : "rgba(240,240,240,0.1)";
+      box.style.color = isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)";
+    }
+    activo = !activo;
+  });
+
+  // Click afuera del popup
+  const clickFuera = (e) => {
+    if (!box.contains(e.target)) {
+      box.remove();
+      document.removeEventListener("click", clickFuera);
+    }
+  };
+  document.addEventListener("click", clickFuera);
 }
+
 
 // Inicialización
 async function initialize() {
