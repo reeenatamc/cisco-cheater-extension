@@ -12,7 +12,8 @@
     "storage"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "https://www.netacad.com/*",
+    "https://content.netacad.com/*"
   ],
   "background": {
     "service_worker": "background.js"
