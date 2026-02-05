@@ -6,14 +6,26 @@
   "permissions": [
     "scripting",
     "activeTab",
+    "tabs",
     "clipboardRead",
     "clipboardWrite",
     "storage"
   ],
   "host_permissions": [
-    "https://www.netacad.com/*",
-    "https://content.netacad.com/*"
+    "<all_urls>"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "capture_screen": {
+      "suggested_key": {
+        "default": "Alt+Period",
+        "mac": "Alt+Period"
+      },
+      "description": "Capturar área de pantalla"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
