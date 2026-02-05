@@ -132,25 +132,8 @@ function mostrarSelectorArea(imageData) {
         pointer-events: none;
     `;
     
-    // Instrucciones
-    const instrucciones = document.createElement('div');
-    instrucciones.style.cssText = `
-        position: fixed;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.8);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 4px;
-        font-size: 12px;
-        z-index: 100001;
-    `;
-    instrucciones.textContent = 'Arrastra para seleccionar el área - ESC para cancelar';
-    
     document.body.appendChild(overlay);
     document.body.appendChild(seleccion);
-    document.body.appendChild(instrucciones);
     
     let startX, startY, isDrawing = false;
     
@@ -191,7 +174,6 @@ function mostrarSelectorArea(imageData) {
         // Limpiar overlay
         overlay.remove();
         seleccion.remove();
-        instrucciones.remove();
         modoCaptura = false;
         
         if (rect.width < 10 || rect.height < 10) {
@@ -225,7 +207,6 @@ function mostrarSelectorArea(imageData) {
         if (e.key === 'Escape') {
             overlay.remove();
             seleccion.remove();
-            instrucciones.remove();
             modoCaptura = false;
             document.removeEventListener('keydown', cancelar);
         }
@@ -298,28 +279,62 @@ async function enviarImagenAGemini(imagenBase64) {
                     
                     const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
                     const box = document.createElement("div");
-                    box.innerHTML = `<div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><strong>IA</strong></div>${data.respuesta}`;
+                    box.innerHTML = `<div style="display:flex;align-items:center;gap:3px;margin-bottom:2px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><strong>servidor</strong></div>${data.respuesta}`;
                     box.style.cssText = `
                         position: fixed;
                         bottom: 16px;
                         left: 16px;
-                        padding: 6px 10px;
+                        padding: 4px 8px;
                         border-radius: 4px;
                         z-index: 9999;
                         font-family: 'Segoe UI', Arial, sans-serif;
-                        font-size: 10px;
-                        max-width: 280px;
-                        background: ${isDarkMode ? 'rgba(30,30,30,0.9)' : 'rgba(240,240,240,0.9)'};
-                        color: ${isDarkMode ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)'};
+                        font-size: 8px;
+                        max-width: 200px;
+                        backdrop-filter: blur(2px);
+                        transition: opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+                        opacity: 0.3;
                         cursor: pointer;
                     `;
+                    
+                    // Estilos iniciales opacos
+                    if (isDarkMode) {
+                        box.style.backgroundColor = "rgba(30, 30, 30, 0.1)";
+                        box.style.color = "rgba(255, 255, 255, 0.3)";
+                    } else {
+                        box.style.backgroundColor = "rgba(240, 240, 240, 0.1)";
+                        box.style.color = "rgba(0, 0, 0, 0.3)";
+                    }
+                    
                     document.body.appendChild(box);
                     popupActivo = box;
                     
-                    box.addEventListener('click', () => {
-                        box.remove();
-                        popupActivo = null;
+                    // Manejo de clicks sobre el popup
+                    let activo = false;
+                    box.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        if (!activo) {
+                            // Hacer más claro
+                            box.style.backgroundColor = isDarkMode ? "rgba(30,30,30,0.9)" : "rgba(240,240,240,0.9)";
+                            box.style.color = isDarkMode ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)";
+                            box.style.opacity = "1";
+                        } else {
+                            // Volver al estado original
+                            box.style.backgroundColor = isDarkMode ? "rgba(30,30,30,0.1)" : "rgba(240,240,240,0.1)";
+                            box.style.color = isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)";
+                            box.style.opacity = "0.3";
+                        }
+                        activo = !activo;
                     });
+                    
+                    // Click afuera del popup
+                    const clickFuera = (e) => {
+                        if (!box.contains(e.target)) {
+                            box.remove();
+                            popupActivo = null;
+                            document.removeEventListener("click", clickFuera);
+                        }
+                    };
+                    document.addEventListener("click", clickFuera);
                 } else {
                     mostrarRespuesta(data.error || 'Error', true);
                 }
@@ -520,9 +535,6 @@ function mostrarRespuesta(respuesta, found = true, preguntaOriginal = null) {
   document.body.appendChild(box);
   popupActivo = box;
 
-  // Animación inicial
-  requestAnimationFrame(() => { box.style.opacity = "1"; });
-
   // Si no se encontró, agregar eventos a los botones
   if (!found && preguntaOriginal) {
     // Botón de consultar con texto (ojo)
@@ -536,11 +548,12 @@ function mostrarRespuesta(respuesta, found = true, preguntaOriginal = null) {
         const resultado = await consultarGemini(preguntaOriginal);
         
         if (resultado.success) {
-          box.innerHTML = `<div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><strong>IA</strong></div>${resultado.message}`;
-          // Hacer visible el resultado
-          box.style.backgroundColor = isDarkMode ? "rgba(33, 28, 28, 0.5)" : "rgba(240,240,240,0.5)";
-          box.style.color = isDarkMode ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)";
-          box.style.maxWidth = "250px";
+          box.innerHTML = `<div style="display:flex;align-items:center;gap:3px;margin-bottom:2px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><strong>servidor</strong></div>${resultado.message}`;
+          // Mantener opacidad inicial baja
+          box.style.backgroundColor = isDarkMode ? "rgba(30, 30, 30, 0.1)" : "rgba(240, 240, 240, 0.1)";
+          box.style.color = isDarkMode ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
+          box.style.opacity = "0.3";
+          box.style.maxWidth = "200px";
         } else {
           geminiBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#e55" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
         }
@@ -558,12 +571,14 @@ function mostrarRespuesta(respuesta, found = true, preguntaOriginal = null) {
     e.stopPropagation(); // Evita que el click se propague al body
     if (!activo) {
       // Hacer más claro
-      box.style.backgroundColor = isDarkMode ? "rgba(30,30,30,0.3)" : "rgba(240,240,240,0.3)";
-      box.style.color = isDarkMode ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.8)";
+      box.style.backgroundColor = isDarkMode ? "rgba(30,30,30,0.9)" : "rgba(240,240,240,0.9)";
+      box.style.color = isDarkMode ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)";
+      box.style.opacity = "1";
     } else {
       // Volver al estado original
       box.style.backgroundColor = isDarkMode ? "rgba(30,30,30,0.1)" : "rgba(240,240,240,0.1)";
       box.style.color = isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)";
+      box.style.opacity = "0.3";
     }
     activo = !activo;
   });
