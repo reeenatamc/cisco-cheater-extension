@@ -3,7 +3,7 @@
 Browser extension half of [cisco-cheater](https://github.com/reeenatamc/cisco-cheater).
 
 Select text on a page and it sends the selection to the local Django server,
-then shows whatever comes back in a small floating popup — no tab switching, no
+then shows whatever comes back in a small floating popup. No tab switching, no
 copy and paste.
 
 ## Install
@@ -16,13 +16,13 @@ The backend has to be running locally for the popup to have anything to show.
 
 ## Contents
 
-- `manifest.json` — permissions and the domains the content script runs on
-- `script.js` — watches the selection, queries the server, renders the popup
+- `manifest.json`: permissions and the domains the content script runs on
+- `script.js`: watches the selection, queries the server, renders the popup
 
 ## Responsibility
 
 Built to practise browser extension messaging against a local service. How
-anyone uses it is their own responsibility — see the
+anyone uses it is their own responsibility. See the
 [NOTICE](https://github.com/reeenatamc/cisco-cheater/blob/main/NOTICE) in the
 backend repository.
 
