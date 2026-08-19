@@ -1,40 +1,30 @@
-# Cisco Helper
+# cisco-cheater-extension
 
-Extensión de navegador que consulta automáticamente texto seleccionado al servidor Django y muestra la respuesta en un popup discreto.
+Browser extension half of [cisco-cheater](https://github.com/reeenatamc/cisco-cheater).
 
-## 📦 Contenido
+Select text on a page and it sends the selection to the local Django server,
+then shows whatever comes back in a small floating popup — no tab switching, no
+copy and paste.
 
-- `manifest.json`: Configura los permisos, dominios permitidos y el script.
-- `script.js`: Escucha la selección de texto, lo copia y consulta a un servidor.
+## Install
 
-## ⚙️ Instalación
+1. Open `chrome://extensions/` (or `edge://extensions/`)
+2. Turn on developer mode
+3. Load unpacked, and pick this folder
 
-1. Clona o descarga esta carpeta.
-2. Abre `chrome://extensions/` o `edge://extensions/`.
-3. Activa el **modo desarrollador**.
-4. Haz clic en **"Cargar descomprimida"** y selecciona la carpeta del proyecto.
+The backend has to be running locally for the popup to have anything to show.
 
-## 💡 Uso
+## Contents
 
-- Selecciona texto en cualquier página permitida.
-- Automáticamente se copia y se consulta al servidor.
-- Se muestra un popup en la esquina inferior izquierda con la respuesta.
+- `manifest.json` — permissions and the domains the content script runs on
+- `script.js` — watches the selection, queries the server, renders the popup
 
-## 🧠 Requisitos
+## Responsibility
 
-El servidor debe estar corriendo y responder con JSON:
+Built to practise browser extension messaging against a local service. How
+anyone uses it is their own responsibility — see the
+[NOTICE](https://github.com/reeenatamc/cisco-cheater/blob/main/NOTICE) in the
+backend repository.
 
-```json
-{ "respuesta": "Texto de respuesta" }
-```
-
-## 🔐 Permisos
-
-La extensión usa:
-
-* `clipboardRead`, `clipboardWrite`: para copiar el texto seleccionado.
-* `<all_urls>` y URLs de NetAcad: para inyectar el script en las páginas deseadas.
-
-## 📄 Licencia
-
+## Licence
 MIT
